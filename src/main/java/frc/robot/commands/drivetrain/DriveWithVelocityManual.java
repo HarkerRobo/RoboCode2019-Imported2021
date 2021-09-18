@@ -73,6 +73,10 @@ public class DriveWithVelocityManual extends IndefiniteCommand {
                   .getPulseWidthPosition() == Global.DISCONNECTED_PULSE_WIDTH_POSITION) { 
          Drivetrain.getInstance().arcadeDrivePercentOutput(speed, Math.pow(turn, 2) * Math.signum(turn));
       } else {
+         if(RobotMap.DEMO_MODE && !(OI.getInstance().getDriverGamepad().getButtonBumperLeftState() && OI.getInstance().getDriverGamepad().getButtonBumperRightState())){
+            speed *= 0.3;
+            turn *= 0.3;
+        }
          Drivetrain.getInstance().arcadeDriveVelocity(speed, Math.pow(turn, 2) * Math.signum(turn));
       }
    }

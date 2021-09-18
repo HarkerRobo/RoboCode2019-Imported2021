@@ -2,8 +2,8 @@ package frc.robot.commands.wrist;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Wrist;
 
 /**
@@ -15,7 +15,7 @@ import frc.robot.subsystems.Wrist;
  * 
  * @since 1/12/19
  */
-public class MoveWristPosition extends Command {
+public class MoveWristPosition extends CommandBase {
    private double position;
 
    public static final double KF = 0.0;
@@ -25,7 +25,7 @@ public class MoveWristPosition extends Command {
    public static final int IZONE = 0;
 
    public MoveWristPosition(double angle) {
-      requires(Wrist.getInstance());
+      addRequirements(Wrist.getInstance());
       this.position = Wrist.getInstance().convertDegreesToEncoder(angle);
    }
 
@@ -50,7 +50,7 @@ public class MoveWristPosition extends Command {
     * {@inheritDoc}
     */
    @Override
-   protected boolean isFinished() {
+   public boolean isFinished() {
       return true;// return
                   // Math.abs(Wrist.getInstance().getMasterTalon().getClosedLoopError(Wrist.POSITION_SLOT))
                   // < Wrist.ALLOWABLE_ERROR;

@@ -1,7 +1,7 @@
 
 package frc.robot.commands.hatchpanelintake;
 
-import edu.wpi.first.wpilibj.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Robot;
 import frc.robot.subsystems.HatchLatcher;
 import frc.robot.subsystems.HatchLatcher.ExtenderDirection;
@@ -17,7 +17,7 @@ import frc.robot.util.PneumaticsUtil;
 public class ToggleExtenderState extends InstantCommand {
 
    public ToggleExtenderState() {
-      requires(HatchLatcher.getInstance());
+      addRequirements(HatchLatcher.getInstance());
    }
 
    /**

@@ -1,6 +1,6 @@
 package frc.robot.commands.arm;
 
-import edu.wpi.first.wpilibj.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Robot;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Arm.ArmDirection;
@@ -16,7 +16,7 @@ public class SetArmState extends InstantCommand {
    private ArmDirection direction;
 
    public SetArmState(ArmDirection direction) {
-      requires(Arm.getInstance());
+      addRequirements(Arm.getInstance());
       this.direction = direction;
 
    }

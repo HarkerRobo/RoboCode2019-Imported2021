@@ -3,9 +3,10 @@ package frc.robot;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj.buttons.Trigger;
-import edu.wpi.first.wpilibj.command.InstantCommand;
-import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.arm.ToggleArmState;
 import frc.robot.commands.drivetrain.AlignWithLimelightDrive;
 import frc.robot.commands.drivetrain.SetLimelightLEDMode;
@@ -37,8 +38,6 @@ import frc.robot.util.CustomOperatorGamepad;
 import frc.robot.util.RunIfNotEqualCommand;
 import frc.robot.util.TriggerButton;
 import frc.robot.util.TriggerButton.TriggerSide;
-import harkerrobolib.auto.ParallelCommandGroup;
-import harkerrobolib.auto.SequentialCommandGroup;
 import harkerrobolib.commands.CallMethodCommand;
 import harkerrobolib.commands.PrintCommand;
 import harkerrobolib.wrappers.HSGamepad;
@@ -218,7 +217,7 @@ public class OI {
       final double LL_TX_SETPOINT = -10.5;
 
       Trigger rightTrigger = new TriggerButton(driverGamepad, TriggerSide.RIGHT);
-      rightTrigger.whileActive(new ConditionalCommand(() -> currentTriggerMode == TriggerMode.ALIGN,
+      rightTrigger.whileActiveContinuous(new ConditionalCommand(() -> currentTriggerMode == TriggerMode.ALIGN,
             new SequentialCommandGroup(new CallMethodCommand(() -> Robot.log("Aligning with Limelight.")),
                   new SetLimelightLEDMode(LEDMode.ON), new SetLimelightViewMode(ViewMode.VISION),
                   new AlignWithLimelightDrive(LL_TX_SETPOINT)))); // align to center
@@ -296,10 +295,10 @@ public class OI {
       //operatorGamepad.trig
          
       Trigger leftTriggerOperator = new TriggerButton(operatorGamepad, TriggerSide.LEFT);
-      leftTriggerOperator.whileActive(new ZeroWrist());
+      leftTriggerOperator.whileActiveContinuous(new ZeroWrist());
       
       Trigger rightTriggerOperator = new TriggerButton(operatorGamepad, TriggerSide.RIGHT);
-      rightTriggerOperator.whileActive(new ZeroElevator()); 
+      rightTriggerOperator.whileActiveContinuous(new ZeroElevator()); 
       
       // operatorGamepad.getButtonSelect().whenPressed(new InstantCommand() {
       //                public void initialize() {

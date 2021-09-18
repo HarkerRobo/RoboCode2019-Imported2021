@@ -1,6 +1,6 @@
 package frc.robot.commands.hatchpanelintake;
 
-import edu.wpi.first.wpilibj.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Robot;
 import frc.robot.subsystems.HatchLatcher;
 import frc.robot.subsystems.HatchLatcher.FlowerDirection;
@@ -15,7 +15,7 @@ public class SetFlowerState extends InstantCommand {
    private FlowerDirection direction;
 
    public SetFlowerState(FlowerDirection direction) {
-      requires(HatchLatcher.getInstance());
+      addRequirements(HatchLatcher.getInstance());
       this.direction = direction;
    }
 

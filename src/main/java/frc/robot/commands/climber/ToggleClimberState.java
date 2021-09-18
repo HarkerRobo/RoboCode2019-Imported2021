@@ -1,7 +1,7 @@
 package frc.robot.commands.climber;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Robot;
 import frc.robot.subsystems.Climber;
 
@@ -14,7 +14,7 @@ import frc.robot.subsystems.Climber;
 public class ToggleClimberState extends InstantCommand {
 
     public ToggleClimberState() {
-        requires(Climber.getInstance());
+        addRequirements(Climber.getInstance());
     }
 
     @Override

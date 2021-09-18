@@ -7,11 +7,10 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotMap.Global;
 import frc.robot.subsystems.Drivetrain;
-import harkerrobolib.auto.Path;
 import harkerrobolib.util.Conversions;
 import harkerrobolib.util.Conversions.PositionUnit;
 import harkerrobolib.util.Conversions.SpeedUnit;
@@ -22,11 +21,8 @@ import harkerrobolib.util.Conversions.SpeedUnit;
  *
  * @author Jatin Kohli
  */
-public class FollowPath extends Command
-{
+public class FollowPath extends CommandBase{
     private MotionProfileStatus status;
-
-	private double dt = Path.DT_DEFAULT;
 
     private BufferedTrajectoryPointStream leftStream;
     private BufferedTrajectoryPointStream rightStream;
@@ -49,8 +45,7 @@ public class FollowPath extends Command
 
     public FollowPath(double[][] leftPath, double[][] rightPath, double dt)
     {
-        requires(Drivetrain.getInstance());
-        this.dt = dt;
+        addRequirements(Drivetrain.getInstance());
         status = new MotionProfileStatus();
 
         leftStream = fillStream(leftPath);
@@ -58,7 +53,7 @@ public class FollowPath extends Command
     }
 
     @Override
-    protected void initialize()
+    public void initialize()
     {
         configTalons();
     
@@ -67,7 +62,7 @@ public class FollowPath extends Command
     }
 
     @Override
-    protected void execute() {
+    public void execute() {
 		Drivetrain.getInstance().getLeftMaster().getMotionProfileStatus(status);
 
 		SmartDashboard.putNumber("Top Buffer", status.topBufferCnt);
@@ -77,12 +72,12 @@ public class FollowPath extends Command
     }
 
     @Override
-    protected boolean isFinished() {
+    public boolean isFinished() {
         return false;
     }
 
 	@Override
-	protected void end()
+	public void end(boolean interrupted)
 	{
         Drivetrain.getInstance().getLeftMaster().set(ControlMode.Disabled, 0);
         Drivetrain.getInstance().getRightMaster().set(ControlMode.Disabled, 0);
@@ -93,12 +88,6 @@ public class FollowPath extends Command
         Drivetrain.getInstance().getLeftMaster().setNeutralMode(NeutralMode.Coast);
     	Drivetrain.getInstance().getRightMaster().setNeutralMode(NeutralMode.Coast);
     }
-
-	@Override
-	protected void interrupted()
-	{
-		end();
-	}
 
     /**
      * Converts a 2-D array representing a path into TractoryPoints and writes
@@ -171,21 +160,15 @@ public class FollowPath extends Command
 		Drivetrain.getInstance().getLeftMaster().configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, Global.PID_PRIMARY);
 		Drivetrain.getInstance().getRightMaster().configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, Global.PID_PRIMARY);
 
-		Drivetrain.getInstance().getLeftMaster().setSelectedSensorPosition(0, Global.PID_PRIMARY);
-		Drivetrain.getInstance().getRightMaster().setSelectedSensorPosition(0, Global.PID_PRIMARY);
+		Drivetrain.getInstance().getLeftMaster().setSelectedSensorPosition(0, Global.PID_PRIMARY, 0);
+		Drivetrain.getInstance().getRightMaster().setSelectedSensorPosition(0, Global.PID_PRIMARY, 0);
 
 		Drivetrain.getInstance().getLeftMaster().setSensorPhase(Drivetrain.LEFT_POSITION_PHASE);
         Drivetrain.getInstance().getRightMaster().setSensorPhase(Drivetrain.RIGHT_POSITION_PHASE);
 
         Drivetrain.getInstance().getLeftMaster().setNeutralMode(NeutralMode.Brake);
         Drivetrain.getInstance().getRightMaster().setNeutralMode(NeutralMode.Brake);
-        
-		Drivetrain.getInstance().getLeftMaster().changeMotionControlFramePeriod(Math.max((int)(dt * Conversions.MS_PER_SEC / 2), 1));
-		Drivetrain.getInstance().getRightMaster().changeMotionControlFramePeriod(Math.max((int)(dt * Conversions.MS_PER_SEC / 2), 1));
-
-		Drivetrain.getInstance().getLeftMaster().configMotionProfileTrajectoryPeriod((int)(dt * Conversions.MS_PER_SEC)); //We want no additional time per point
-        Drivetrain.getInstance().getRightMaster().configMotionProfileTrajectoryPeriod((int)(dt * Conversions.MS_PER_SEC)); //0
-        
+  
 		Drivetrain.getInstance().getLeftMaster().configMotionProfileTrajectoryInterpolationEnable(false);
         Drivetrain.getInstance().getRightMaster().configMotionProfileTrajectoryInterpolationEnable(false);
 

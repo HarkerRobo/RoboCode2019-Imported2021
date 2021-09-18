@@ -29,7 +29,7 @@ public class SpinRollersIndefinite extends IndefiniteCommand {
    }
 
    public SpinRollersIndefinite(Supplier<Double> magnitudeLambda, RollerDirection direction) {
-      requires(Rollers.getInstance());
+      addRequirements(Rollers.getInstance());
       this.direction = direction;
       this.magnitudeLambda = magnitudeLambda;
    }
@@ -55,15 +55,7 @@ public class SpinRollersIndefinite extends IndefiniteCommand {
     * {@inheritDoc}
     */
    @Override
-   public void end() {
-      Rollers.getInstance().stopRollers();
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void interrupted() {
+   public void end(boolean interrupted) {
       Rollers.getInstance().stopRollers();
    }
 }

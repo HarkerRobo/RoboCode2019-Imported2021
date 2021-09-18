@@ -4,8 +4,8 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDSourceType;
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.OI;
 import frc.robot.RobotMap;
 import frc.robot.RobotMap.RobotType;
@@ -24,7 +24,7 @@ import harkerrobolib.util.MathUtil;
  * @author Angela Jia
  * @since 1/12/19
  */
-public class AlignWithLimelightDrive extends Command {
+public class AlignWithLimelightDrive extends CommandBase {
 
    public static final double TURN_KP, TURN_KI, TURN_KD, TURN_KF;
    public static final double FORWARD_KP, FORWARD_KI, FORWARD_KD, FORWARD_KF;
@@ -60,7 +60,7 @@ public class AlignWithLimelightDrive extends Command {
    private double txSetpoint;
 
    public AlignWithLimelightDrive(double txSetpoint) {
-      requires(Drivetrain.getInstance());
+      addRequirements(Drivetrain.getInstance());
 
       this.txSetpoint = txSetpoint;
 
@@ -112,18 +112,10 @@ public class AlignWithLimelightDrive extends Command {
     * {@inheritDoc}
     */
    @Override
-   public void end() {
+   public void end(boolean interrupted) {
       Drivetrain.getInstance().setBoth(ControlMode.Disabled, 0);
       turnController.disable();
       Limelight.getInstance().setCamModeDriver();
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void interrupted() {
-      end();
    }
 
    /**

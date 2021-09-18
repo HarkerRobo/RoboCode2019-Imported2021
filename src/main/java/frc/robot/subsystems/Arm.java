@@ -2,7 +2,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotMap;
 import frc.robot.RobotMap.CAN_IDs;
 import frc.robot.RobotMap.RobotType;
@@ -16,7 +16,7 @@ import frc.robot.RobotMap.RobotType;
  * @author Angela Jia
  * @since 1/11/19
  */
-public class Arm extends Subsystem {
+public class Arm extends SubsystemBase {
    public static final DoubleSolenoid.Value ARM_UP_VALUE;
    public static final DoubleSolenoid.Value ARM_DOWN_VALUE;
 

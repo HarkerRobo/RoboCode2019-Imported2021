@@ -1,6 +1,6 @@
 package frc.robot.commands.hatchpanelintake;
 
-import edu.wpi.first.wpilibj.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Robot;
 import frc.robot.subsystems.HatchLatcher;
 import frc.robot.subsystems.HatchLatcher.FlowerDirection;
@@ -14,7 +14,7 @@ import frc.robot.util.PneumaticsUtil;
  */
 public class ToggleFlowerState extends InstantCommand {
    public ToggleFlowerState() {
-      requires(HatchLatcher.getInstance());
+      addRequirements(HatchLatcher.getInstance());
    }
 
    /**

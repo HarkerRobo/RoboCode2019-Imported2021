@@ -5,9 +5,10 @@ import java.util.function.Supplier;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
-import edu.wpi.first.wpilibj.command.InstantCommand;
-import edu.wpi.first.wpilibj.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.OI;
 import frc.robot.OI.TriggerMode;
 import frc.robot.Robot;
@@ -26,8 +27,6 @@ import frc.robot.subsystems.HatchLatcher.ExtenderDirection;
 import frc.robot.subsystems.Wrist;
 import frc.robot.util.ConditionalCommand;
 import frc.robot.util.Pair;
-import harkerrobolib.auto.ParallelCommandGroup;
-import harkerrobolib.auto.SequentialCommandGroup;
 import harkerrobolib.commands.CallMethodCommand;
 import harkerrobolib.util.MathUtil;
 
@@ -40,7 +39,7 @@ import harkerrobolib.util.MathUtil;
  * @author Arnav Gupta
  * @since 2/11/19
  */
-public class SetScoringPosition extends CommandGroup {
+public class SetScoringPosition extends SequentialCommandGroup {
    public enum Location {
       F1(Elevator.LOW_ROCKET_SCORING_POSITION_CARGO, Wrist.SCORING_POSITION_FRONT_CARGO_2,
             Elevator.LOW_SCORING_POSITION_HATCH, Wrist.SCORING_POSITION_FRONT_HATCH),
@@ -138,10 +137,10 @@ public class SetScoringPosition extends CommandGroup {
       BooleanSupplier isDefenseMode = () -> Wrist.getInstance().isAmbiguous()
             && Arm.getInstance().getDirection() == ArmDirection.UP;
 
-      addSequential(new CallMethodCommand(() -> Wrist.getInstance().getFollowerTalon().follow(Wrist.getInstance().getMasterTalon())));
-      addSequential(new CallMethodCommand(() -> Robot.log("SetScoringPosition to " + desiredLocation.name()
+      addCommands(new CallMethodCommand(() -> Wrist.getInstance().getFollowerTalon().follow(Wrist.getInstance().getMasterTalon())));
+      addCommands(new CallMethodCommand(() -> Robot.log("SetScoringPosition to " + desiredLocation.name()
             + " with desired Height, " + getDesiredHeight.get() + " , desired Angle, " + getDesiredAngle.get() + ".")));
-      addSequential(new InstantCommand() {
+      addCommands(new InstantCommand() {
          @Override
          public void initialize() {
             Elevator.getInstance().getMasterTalon().set(ControlMode.Disabled, 0.0);
@@ -149,26 +148,26 @@ public class SetScoringPosition extends CommandGroup {
          }
       });
 
-      addSequential(new CallMethodCommand(() -> System.out.println("desired height " + getDesiredHeight.get()
+      addCommands(new CallMethodCommand(() -> System.out.println("desired height " + getDesiredHeight.get()
             + " desired angle: " + getDesiredAngle.get() + " must passthrough:" + mustPassthroughLow.getAsBoolean()
             + " safe passthrough height: " + getSafePassthroughHeight.get())));
 
-      addSequential(new ConditionalCommand(isDefenseMode, new MoveWristMotionMagic(Wrist.SAFE_BACKWARD_POSITION)));
+      addCommands(new ConditionalCommand(isDefenseMode, new MoveWristMotionMagic(Wrist.SAFE_BACKWARD_POSITION)));
 
-      addSequential(new ConditionalCommand(() -> Arm.getInstance().getDirection() == ArmDirection.UP && 
+      addCommands(new ConditionalCommand(() -> Arm.getInstance().getDirection() == ArmDirection.UP && 
                                                 !(Wrist.getInstance().getCurrentSide() == Side.BACK && getDesiredSide.get() == Side.BACK), //is it bc sometimes desired side changes throughout?
             new ConditionalCommand(
                   () -> Wrist.getInstance().getCurrentSide() == Side.FRONT
                         && Elevator.getInstance().isBelow(Elevator.ARM_COLLISION_HEIGHT),
                   new SequentialCommandGroup(new SetArmState(ArmDirection.DOWN),
                         new WaitCommand(Arm.DOWN_SAFE_ACTUATION_TIME)), new SetArmState(ArmDirection.DOWN))));
-      addSequential(new ConditionalCommand(
+      addCommands(new ConditionalCommand(
             () -> (mustPassthroughHigh.getAsBoolean() || mustPassthroughLow.getAsBoolean()
                   || desiredLocation == Location.HATCH_INTAKE || desiredLocation == Location.CARGO_INTAKE),
             new SetExtenderState(ExtenderDirection.IN)));
-      addSequential(
+      addCommands(
             new ConditionalCommand(mustPassthroughHigh, new MoveWristMotionMagic(Wrist.BACK_HIGH_PASSTHROUGH_ANGLE)));
-      addSequential(new ConditionalCommand(
+      addCommands(new ConditionalCommand(
             () -> mustPassthroughLow.getAsBoolean() && Elevator.getInstance().isAbove(getSafePassthroughHeight.get()), // needs
                                                                                                                        // to
                                                                                                                        // pass
@@ -183,40 +182,40 @@ public class SetScoringPosition extends CommandGroup {
                                                                   Wrist.FRONT_LOW_PASSTHROUGH_ANGLE
                                                                   : Wrist.BACK_LOW_PASSTHROUGH_ANGLE
                                                                   ), new MoveElevatorMotionMagic(getSafePassthroughHeight))));
-      addSequential(
+      addCommands(
             new ConditionalCommand(() -> mustPassthroughLow.getAsBoolean(), new WaitCommand(PASSTHROUGH_WAIT_TIME)));
-      addSequential(new MoveWristMotionMagic(
+      addCommands(new MoveWristMotionMagic(
             () -> (mustPassthroughLow.getAsBoolean()
                   ? (getDesiredSide.get() == Side.FRONT ? Wrist.FRONT_LOW_PASSTHROUGH_ANGLE
                         : Wrist.BACK_LOW_PASSTHROUGH_ANGLE)
                   : getDesiredAngle.get()))); // perform the passthrough OR simply move to desired angle
-      addSequential(new MoveElevatorMotionMagic(getDesiredHeight));
+      addCommands(new MoveElevatorMotionMagic(getDesiredHeight));
 
       if (desiredLocation == Location.F3) {
-         addSequential(new MoveWristMotionMagic(
+         addCommands(new MoveWristMotionMagic(
                () -> (doHatch.get() ? Wrist.FRONT_HIGH_PASSTHROUGH_HATCH : Wrist.SCORING_POSITION_FRONT_CARGO_3)));
       } else if (desiredLocation == Location.F2) {
-         addSequential(new MoveWristMotionMagic(
+         addCommands(new MoveWristMotionMagic(
                () -> (doHatch.get() ? Wrist.SCORING_POSITION_FRONT_HATCH : Wrist.SCORING_POSITION_FRONT_CARGO_2)));
       } else {
-         addSequential(new MoveWristMotionMagic(getDesiredAngle));
+         addCommands(new MoveWristMotionMagic(getDesiredAngle));
       }
 
-      addSequential(new MoveElevatorMotionMagic(getDesiredHeight));
+      addCommands(new MoveElevatorMotionMagic(getDesiredHeight));
       if (desiredLocation == Location.CARGO_INTAKE)
-            addSequential(new SetExtenderState(ExtenderDirection.OUT));
+            addCommands(new SetExtenderState(ExtenderDirection.OUT));
       if (desiredLocation == Location.F1 || desiredLocation == Location.F2 || desiredLocation == Location.F3
             || desiredLocation == Location.CARGO_SHIP_FRONT) {
-         addSequential(new SetArmState(ArmDirection.UP));
+            addCommands(new SetArmState(ArmDirection.UP));
       }
 
-      addSequential(new ConditionalCommand(
+      addCommands(new ConditionalCommand(
             () -> HatchLatcher.getInstance().hasHatch() && desiredLocation != Location.HATCH_INTAKE
                   && desiredLocation != Location.CARGO_INTAKE
                   && desiredLocation != Location.PARALLEL_BACK 
                   && desiredLocation != Location.PARALLEL_FRONT,
             new SetExtenderState(ExtenderDirection.OUT)));
-      addSequential(new ConditionalCommand(() -> desiredLocation != Location.CARGO_INTAKE && 
+      addCommands(new ConditionalCommand(() -> desiredLocation != Location.CARGO_INTAKE && 
                                                  desiredLocation != Location.PARALLEL_BACK && 
                                                  desiredLocation != Location.PARALLEL_FRONT, 
                         new SetArmState(ArmDirection.UP)));

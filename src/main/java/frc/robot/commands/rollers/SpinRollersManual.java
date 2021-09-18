@@ -17,7 +17,7 @@ import harkerrobolib.commands.IndefiniteCommand;
 public class SpinRollersManual extends IndefiniteCommand {
 
    public SpinRollersManual() {
-      requires(Rollers.getInstance());
+      addRequirements(Rollers.getInstance());
       Robot.log("SpinRollersManual constructed.");
    }
 

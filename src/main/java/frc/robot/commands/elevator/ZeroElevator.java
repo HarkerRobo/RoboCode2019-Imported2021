@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.RobotMap.RobotType;
@@ -19,7 +19,7 @@ import frc.robot.subsystems.Elevator;
  * @author Finn Frankis
  * @since 1/14/19
  */
-public class ZeroElevator extends Command {
+public class ZeroElevator extends CommandBase {
 
    private static final double ZERO_SPEED;
    static {
@@ -37,7 +37,7 @@ public class ZeroElevator extends Command {
    private int startTime = 0;
 
    public ZeroElevator() {
-      requires(Elevator.getInstance());
+      addRequirements(Elevator.getInstance());
       currentVals = new ArrayList<Double>();
    }
 
@@ -55,7 +55,7 @@ public class ZeroElevator extends Command {
     * @return true if wrist has hit hard limit on front side
     */
    @Override
-   protected boolean isFinished() {
+   public boolean isFinished() {
       if (Robot.getTime() - startTime > TIMEOUT) {
          return true;
       }
@@ -63,7 +63,7 @@ public class ZeroElevator extends Command {
       return Elevator.getInstance().getMasterTalon().getSensorCollection().isRevLimitSwitchClosed();
    }
 
-   protected void end() {
+   public void end(boolean interrupted) {
       Elevator.getInstance().getMasterTalon().set(ControlMode.Disabled, 0);
       Elevator.getInstance().getMasterTalon().setSelectedSensorPosition(0);
       ((MoveElevatorManual) Elevator.getInstance().getDefaultCommand()).setLastPosition(0);

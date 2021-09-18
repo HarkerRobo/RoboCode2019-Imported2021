@@ -4,7 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotMap;
 import frc.robot.RobotMap.CAN_IDs;
 import frc.robot.RobotMap.RobotType;
@@ -18,7 +18,7 @@ import harkerrobolib.util.Constants;
  * @author Angela Jia
  * @since 1/11/19
  */
-public class Intake extends Subsystem {
+public class Intake extends SubsystemBase {
    public enum IntakeDirection {
       IN(1), OUT(-1), STOP(0);
       private int sign;
@@ -81,11 +81,6 @@ public class Intake extends Subsystem {
       }
       return instance;
    }
-
-   @Override
-   protected void initDefaultCommand() {
-   }
-
    // public double getEncoderPosition () {
    // return Intake.getInstance().getController().getEncoder().getPosition();
    // }

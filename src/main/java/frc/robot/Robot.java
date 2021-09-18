@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.arm.SetArmState;
 import frc.robot.commands.drivetrain.GenerateAndFollowPath;
@@ -103,7 +103,7 @@ public class Robot extends TimedRobot {
       wrist.resetEncoderPosition();
       rollers.talonInit();
       intake.controllerInit();
-      new SetLimelightLEDMode(LEDMode.OFF).start();
+      // new SetLimelightLEDMode(LEDMode.OFF).start();
       // climber.talonInit();
 
       Conversions.setWheelDiameter(Drivetrain.WHEEL_DIAMETER);
@@ -137,14 +137,14 @@ public class Robot extends TimedRobot {
       startTime = Timer.getFPGATimestamp();
       setupPrintWriter();
       log("Autonomous initialized.");
-      new SetLimelightLEDMode(LEDMode.OFF).start();
-      new SetLimelightViewMode(ViewMode.DRIVER).start();
+      // new SetLimelightLEDMode(LEDMode.OFF).start();
+      // new SetLimelightViewMode(ViewMode.DRIVER).start();
 
       HatchLatcher.getInstance().setExtenderState(ExtenderDirection.IN);
       HatchLatcher.getInstance().setFlowerState(FlowerDirection.OPEN);
-      new SetArmState(ArmDirection.UP).start();
+      // new SetArmState(ArmDirection.UP).start();
 
-      new SetExtenderState(ExtenderDirection.IN).start();
+      // new SetExtenderState(ExtenderDirection.IN).start();
 
       Elevator.getInstance().getMasterTalon().setSelectedSensorPosition(0);
    }
@@ -154,7 +154,7 @@ public class Robot extends TimedRobot {
     */
    @Override
    public void autonomousPeriodic() {
-      Scheduler.getInstance().run();
+      // Scheduler.getInstance().run();
    }
 
    /**
@@ -176,7 +176,7 @@ public class Robot extends TimedRobot {
     */
    @Override
    public void teleopPeriodic() {
-      Scheduler.getInstance().run();
+      CommandScheduler.getInstance().run();
       // SmartDashboard.putNumber("Elevator Position",
       // Elevator.getInstance().getMasterTalon().getSelectedSensorPosition());
       // talon.set(ControlMode.PercentOutput,
@@ -209,7 +209,6 @@ public class Robot extends TimedRobot {
       SmartDashboard.putNumber("Rollers current limit ", Rollers.getInstance().talon().getOutputCurrent());
       compressor.setClosedLoopControl(true);
       SmartDashboard.putNumber("rise", Wrist.getInstance().getMasterTalon().getSensorCollection().getPulseWidthRiseToFallUs());
-      SmartDashboard.putNumber("intake", Intake.getInstance().getSpark().getEncoder().getVelocity());
       SmartDashboard.putNumber("dt left", Drivetrain.getInstance().getLeftMaster().getSelectedSensorPosition());
       SmartDashboard.putNumber("dt right", Drivetrain.getInstance().getRightMaster().getSelectedSensorPosition());
 
@@ -268,16 +267,7 @@ public class Robot extends TimedRobot {
 
    @Override
    public void testInit() {
-      double pathTime = 5;
-      double dt = 0.05;
 
-      new SetLimelightLEDMode(LEDMode.ON);
-
-      // SetScoringPosition s = new SetScoringPosition(Location.F2);
-      // setScoringCommand(s);
-      // s.start();
-
-      new GenerateAndFollowPath(dt, pathTime).start();
    }
 
    /**

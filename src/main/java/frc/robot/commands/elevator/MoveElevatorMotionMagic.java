@@ -4,8 +4,8 @@ import java.util.function.Supplier;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.RobotMap.RobotType;
@@ -18,7 +18,7 @@ import frc.robot.subsystems.Elevator;
  * @author Angela Jia
  * @since 1/14/19
  */
-public class MoveElevatorMotionMagic extends Command {
+public class MoveElevatorMotionMagic extends CommandBase {
 
    private int setpoint;
 
@@ -66,7 +66,7 @@ public class MoveElevatorMotionMagic extends Command {
    private Supplier<Integer> setpointLambda;
 
    public MoveElevatorMotionMagic(int setpoint) {
-      requires(Elevator.getInstance());
+      addRequirements(Elevator.getInstance());
       this.setpoint = setpoint;
    }
 
@@ -79,7 +79,7 @@ public class MoveElevatorMotionMagic extends Command {
     * {@inheritDoc}
     */
    @Override
-   protected boolean isFinished() {
+   public boolean isFinished() {
       return Math
             .abs(setpoint - Elevator.getInstance().getMasterTalon().getSelectedSensorPosition()) <= ALLOWABLE_ERROR;
    }
@@ -88,7 +88,7 @@ public class MoveElevatorMotionMagic extends Command {
     * {@inheritDoc}
     */
    @Override
-   protected void initialize() {
+   public void initialize() {
       if (setpointLambda != null) {
          this.setpoint = setpointLambda.get();
       }
@@ -101,13 +101,13 @@ public class MoveElevatorMotionMagic extends Command {
     * {@inheritDoc}
     */
    @Override
-   protected void execute() {
+   public void execute() {
       Elevator.getInstance().setElevator(ControlMode.MotionMagic, setpoint);
       SmartDashboard.putNumber("el error", Elevator.getInstance().getMasterTalon().getClosedLoopError());
 
    }
 
-   public void end() {
+   public void end(boolean interrupted) {
       System.out.println("command ended");
       Robot.log("MoveElevatorMotionMagic ended.");
    }

@@ -5,7 +5,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotMap;
 import frc.robot.RobotMap.CAN_IDs;
 import frc.robot.RobotMap.RobotType;
@@ -19,8 +19,7 @@ import harkerrobolib.wrappers.HSTalon;
  * @author Angela Jia
  * @since 3/14/19
  */
-public class Climber extends Subsystem {
-
+public class Climber extends SubsystemBase {
    private static Climber instance;
 
    private HSTalon talon;

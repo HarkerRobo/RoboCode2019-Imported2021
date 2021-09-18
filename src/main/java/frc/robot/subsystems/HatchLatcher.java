@@ -2,7 +2,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotMap;
 import frc.robot.RobotMap.CAN_IDs;
 import frc.robot.RobotMap.RobotType;
@@ -19,7 +19,7 @@ import frc.robot.RobotMap.RobotType;
  * @author Aimee Wang
  * @since 1/14/19
  */
-public class HatchLatcher extends Subsystem {
+public class HatchLatcher extends SubsystemBase {
    public static final DoubleSolenoid.Value EXTENDER_IN_VALUE;
    public static final DoubleSolenoid.Value EXTENDER_OUT_VALUE;
 
@@ -90,10 +90,6 @@ public class HatchLatcher extends Subsystem {
       extender = new DoubleSolenoid(CAN_IDs.EXTENDER_FORWARD_CHANNEL, CAN_IDs.EXTENDER_REVERSE_CHANNEL);
       flower = new DoubleSolenoid(CAN_IDs.FLOWER_FORWARD_CHANNEL, CAN_IDs.FLOWER_REVERSE_CHANNEL);
       compressor.setClosedLoopControl(COMPRESSOR_INITAL_STATE);
-   }
-
-   @Override
-   public void initDefaultCommand() {
    }
 
    public ExtenderDirection getExtenderState() {

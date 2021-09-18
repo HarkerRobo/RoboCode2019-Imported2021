@@ -16,7 +16,7 @@ import harkerrobolib.util.MathUtil;
 public class DriveWithPercentManual extends IndefiniteCommand {
 
    public DriveWithPercentManual() {
-      requires(Drivetrain.getInstance());
+      addRequirements(Drivetrain.getInstance());
    }
 
    /**
@@ -38,13 +38,5 @@ public class DriveWithPercentManual extends IndefiniteCommand {
             OI.DRIVER_DEADBAND);
 
       Drivetrain.getInstance().arcadeDrivePercentOutput(leftDriverY, leftDriverX);
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void interrupted() {
-      Drivetrain.getInstance().setBoth(ControlMode.Disabled, 0.0);
    }
 }

@@ -4,7 +4,7 @@ import java.util.function.Supplier;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.RobotMap.RobotType;
@@ -19,7 +19,7 @@ import frc.robot.subsystems.Wrist;
  * 
  * @since 1/12/19
  */
-public class MoveWristMotionMagic extends Command {
+public class MoveWristMotionMagic extends CommandBase {
    private double position;
    private Supplier<Integer> setpointLambda;
 
@@ -52,12 +52,12 @@ public class MoveWristMotionMagic extends Command {
    }
 
    public MoveWristMotionMagic(double angle) {
-      requires(Wrist.getInstance());
+      addRequirements(Wrist.getInstance());
       this.position = Wrist.getInstance().convertDegreesToEncoder(angle);
    }
 
    public MoveWristMotionMagic(Supplier<Integer> setpointLambda) {
-      super(0);
+      super();
       this.setpointLambda = setpointLambda;
    }
 
@@ -86,20 +86,15 @@ public class MoveWristMotionMagic extends Command {
     * {@inheritDoc}
     */
    @Override
-   protected boolean isFinished() {
+   public boolean isFinished() {
       return Math
             .abs(position - Wrist.getInstance().getMasterTalon().getSelectedSensorPosition()) <= Wrist.ALLOWABLE_ERROR;
    }
 
    @Override
-   public void end() {
+   public void end(boolean interrupted) {
       System.out.println("wrist motion magic end");
 
       Robot.log("MoveWristMotionMagic ended.");
-   }
-
-   @Override
-   public void interrupted() {
-      end();
    }
 }

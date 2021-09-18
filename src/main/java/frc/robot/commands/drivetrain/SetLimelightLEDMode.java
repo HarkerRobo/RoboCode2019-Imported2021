@@ -1,7 +1,7 @@
 package frc.robot.commands.drivetrain;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Robot;
 import frc.robot.util.Limelight;
 
@@ -28,7 +28,7 @@ public class SetLimelightLEDMode extends InstantCommand {
 
    public SetLimelightLEDMode(LEDMode mode) {
       this.mode = mode;
-      this.setRunWhenDisabled(true);
+      // this.setRunWhenDisabled(true);
    }
 
    public void initialize() {

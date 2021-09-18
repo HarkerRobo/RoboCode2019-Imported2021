@@ -1,6 +1,6 @@
 package frc.robot.util;
 
-import edu.wpi.first.wpilibj.buttons.Trigger;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import harkerrobolib.wrappers.HSGamepad;
 
 public class TriggerButton extends Trigger {
@@ -18,7 +18,6 @@ public class TriggerButton extends Trigger {
         this.side = side;
     }
 
-    @Override
     public boolean get() {
         return (side == TriggerSide.LEFT) ? gamepad.getLeftTrigger() > TRIGGER_DEADBAND : gamepad.getRightTrigger() > TRIGGER_DEADBAND;
     }

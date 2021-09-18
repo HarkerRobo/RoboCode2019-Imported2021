@@ -54,7 +54,7 @@ public class DriveWithVelocityManual extends IndefiniteCommand {
    }
 
    public DriveWithVelocityManual() {
-      requires(Drivetrain.getInstance());
+      addRequirements(Drivetrain.getInstance());
       Robot.log("DriveWithVelocityManual constructed.");
    }
 
@@ -77,7 +77,7 @@ public class DriveWithVelocityManual extends IndefiniteCommand {
       }
    }
 
-   public void end() {
+   public void end(boolean interrupted) {
       Drivetrain.getInstance().getLeftMaster().set(ControlMode.Disabled, 0);
       Drivetrain.getInstance().getRightMaster().set(ControlMode.Disabled, 0);
    }

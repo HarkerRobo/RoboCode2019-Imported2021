@@ -1,7 +1,7 @@
 package frc.robot.commands.arm;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Robot;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Arm.ArmDirection;
@@ -16,7 +16,7 @@ import frc.robot.subsystems.Arm.ArmDirection;
 public class ToggleArmState extends InstantCommand {
 
    public ToggleArmState() {
-      requires(Arm.getInstance());
+      addRequirements(Arm.getInstance());
    }
 
    public void initialize() {

@@ -1,6 +1,6 @@
 package frc.robot.commands.rollers;
 
-import edu.wpi.first.wpilibj.command.TimedCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.Rollers;
 import frc.robot.subsystems.Rollers.RollerDirection;
 
@@ -9,13 +9,13 @@ import frc.robot.subsystems.Rollers.RollerDirection;
  * 
  * @since 1/12/19
  */
-public class SpinRollersTimed extends TimedCommand {
+public class SpinRollersTimed extends WaitCommand{
    private double magnitude;
    private RollerDirection direction;
 
    public SpinRollersTimed(double magnitude, double time, RollerDirection direction) {
       super(time);
-      requires(Rollers.getInstance());
+      addRequirements(Rollers.getInstance());
       this.magnitude = magnitude;
       this.direction = direction;
    }
@@ -25,6 +25,7 @@ public class SpinRollersTimed extends TimedCommand {
     */
    @Override
    public void execute() {
+      super.execute();
       Rollers.getInstance().moveRollers(magnitude, direction);
    }
 
@@ -32,16 +33,9 @@ public class SpinRollersTimed extends TimedCommand {
     * {@inheritDoc}
     */
    @Override
-   public void end() {
+   public void end(boolean interrupted) {
+      super.end(interrupted);
       Rollers.getInstance().stopRollers();
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void interrupted() {
-      end();
    }
 
 }

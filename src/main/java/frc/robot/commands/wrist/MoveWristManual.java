@@ -27,7 +27,7 @@ public class MoveWristManual extends IndefiniteCommand {
    private double lastPos;
 
    public MoveWristManual() {
-      requires(Wrist.getInstance());
+      addRequirements(Wrist.getInstance());
       Robot.log("MoveWristManual constructed.");
       isHolding = false;
       shouldClosedLoop = false;

@@ -3,7 +3,7 @@ package frc.robot.util;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.Command;
 
 /**
  * Command that runs a specific command if it is not equal to another command.

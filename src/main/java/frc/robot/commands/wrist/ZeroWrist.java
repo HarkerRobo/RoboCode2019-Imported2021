@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Arm.ArmDirection;
@@ -18,7 +18,7 @@ import frc.robot.subsystems.Wrist.WristDirection;
  * @author Angela Jia
  * @since 2/8/19
  */
-public class ZeroWrist extends Command {
+public class ZeroWrist extends CommandBase {
    private static final double ZERO_SPEED = 0.21;
    private static final int CURRENT_SPIKE = 7;
    private static final double TIMEOUT = 5000;
@@ -28,7 +28,7 @@ public class ZeroWrist extends Command {
    private int startTime = 0;
 
    public ZeroWrist() {
-      requires(Wrist.getInstance());
+      addRequirements(Wrist.getInstance());
       currentVals = new ArrayList<Double>();
    }
 
@@ -49,7 +49,7 @@ public class ZeroWrist extends Command {
     * @return true if wrist has hit hard limit on front side
     */
    @Override
-   protected boolean isFinished() {
+   public boolean isFinished() {
       if (Robot.getTime() - startTime > TIMEOUT) {
          return true;
       }
@@ -68,7 +68,7 @@ public class ZeroWrist extends Command {
       return false;
    }
 
-   protected void end() {
+   public void end(boolean interrupted) {
       Wrist.getInstance().setWrist(ControlMode.Disabled, 0);
       Wrist.getInstance().getMasterTalon().setSelectedSensorPosition(0);
       Wrist.getInstance().getMasterTalon().configReverseSoftLimitEnable(true);

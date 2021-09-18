@@ -1,16 +1,15 @@
 package frc.robot.commands.intake;
 
-import edu.wpi.first.wpilibj.command.TimedCommand;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Intake.IntakeDirection;
-
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 /**
  * Intakes the ball into the robot.
  * 
  * @author Anirudh Kotamraju
  * @since 1/11/19
  */
-public class SpinIntakeTimed extends TimedCommand {
+public class SpinIntakeTimed extends WaitCommand {
    private double magnitude;
    private IntakeDirection direction;
 
@@ -21,7 +20,7 @@ public class SpinIntakeTimed extends TimedCommand {
     */
    public SpinIntakeTimed(double magnitude, double time, IntakeDirection direction) {
       super(time);
-      requires(Intake.getInstance());
+      addRequirements(Intake.getInstance());
       this.magnitude = magnitude;
       this.direction = direction;
    }
@@ -31,6 +30,7 @@ public class SpinIntakeTimed extends TimedCommand {
     */
    @Override
    public void execute() {
+      super.execute();
       Intake.getInstance().setControllerOutput(magnitude, direction);
    }
 
@@ -38,7 +38,8 @@ public class SpinIntakeTimed extends TimedCommand {
     * {@inheritDoc}
     */
    @Override
-   public void end() {
+   public void end(boolean interrupted) {
+      super.end(interrupted);
       Intake.getInstance().setControllerOutput(0, IntakeDirection.STOP);
    }
 }

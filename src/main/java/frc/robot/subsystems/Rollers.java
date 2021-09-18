@@ -4,7 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.OI;
 import frc.robot.RobotMap;
 import frc.robot.RobotMap.CAN_IDs;
@@ -20,7 +20,7 @@ import harkerrobolib.wrappers.HSTalon;
  * @author Chirag Kaushik
  * @since 1/10/19
  */
-public class Rollers extends Subsystem {
+public class Rollers extends SubsystemBase {
    public enum RollerDirection {
       IN(-1), OUT(1);
 
@@ -77,8 +77,7 @@ public class Rollers extends Subsystem {
       currentOutput = 0.0;
    }
 
-   @Override
-   protected void initDefaultCommand() {
+   public void initDefaultCommand() {
       setDefaultCommand(new SpinRollersManual());
    }
 

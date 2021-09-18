@@ -18,7 +18,7 @@ import harkerrobolib.commands.IndefiniteCommand;
 public class SpinIntakeManual extends IndefiniteCommand {
 
    public SpinIntakeManual() {
-      requires(Intake.getInstance());
+      addRequirements(Intake.getInstance());
       Robot.log("SpinIntakeManual constructed.");
    }
 

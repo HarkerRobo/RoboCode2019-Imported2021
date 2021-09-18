@@ -5,17 +5,18 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotMap;
 import frc.robot.RobotMap.CAN_IDs;
 import frc.robot.RobotMap.Global;
 import frc.robot.RobotMap.RobotType;
 import frc.robot.commands.drivetrain.DriveWithVelocityManual;
 import frc.robot.util.Pair;
-import harkerrobolib.subsystems.HSDrivetrain;
 import harkerrobolib.util.Conversions;
 import harkerrobolib.util.Conversions.SpeedUnit;
 import harkerrobolib.wrappers.HSPigeon;
 import harkerrobolib.wrappers.HSTalon;
+import harkerrobolib.subsystems.HSDiffDrivetrain;
 
 /**
  * Represents the drivetrain on the robot.
@@ -29,7 +30,7 @@ import harkerrobolib.wrappers.HSTalon;
  * @author Dawson Chen
  * @since 1/7/19
  */
-public class Drivetrain extends HSDrivetrain {
+public class Drivetrain extends HSDiffDrivetrain<HSTalon> {
    private static Drivetrain instance;
 
    private final static boolean LEFT_MASTER_INVERTED;
@@ -75,16 +76,14 @@ public class Drivetrain extends HSDrivetrain {
     * Creates new instance of Drivetrain.
     */
    private Drivetrain() {
-      super(new HSTalon(CAN_IDs.DT_LEFT_MASTER), new HSTalon(CAN_IDs.DT_RIGHT_MASTER),
-            new VictorSPX(CAN_IDs.DT_LEFT_FOLLOWER), new VictorSPX(CAN_IDs.DT_RIGHT_FOLLOWER),
-            new HSPigeon(CAN_IDs.PIGEON));
+      super(new HSTalon(RobotMap.CAN_IDs.DT_LEFT_MASTER), new HSTalon(RobotMap.CAN_IDs.DT_RIGHT_MASTER), 
+            new VictorSPX(RobotMap.CAN_IDs.DT_LEFT_FOLLOWER), new VictorSPX(RobotMap.CAN_IDs.DT_RIGHT_FOLLOWER), WHEEL_DIAMETER);
    }
 
    /**
     * Intializes the default command of the drivetrain.
     */
-   @Override
-   protected void initDefaultCommand() {
+   public void initDefaultCommand() {
       // setDefaultCommand(new AlignWithLimelight(198, 0, 4));
       setDefaultCommand(new DriveWithVelocityManual());
    }

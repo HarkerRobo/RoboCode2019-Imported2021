@@ -4,8 +4,8 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDSourceType;
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotMap;
 import frc.robot.RobotMap.RobotType;
 import frc.robot.subsystems.Drivetrain;
@@ -22,7 +22,7 @@ import frc.robot.util.PIDSourceCustomGet;
  * @author Angela Jia
  * @since 1/12/19
  */
-public class AlignWithLimelight extends Command {
+public class AlignWithLimelight extends CommandBase {
    private Limelight limelight;
 
    public static final double TURN_KP, TURN_KI, TURN_KD, TURN_KF;
@@ -73,7 +73,7 @@ public class AlignWithLimelight extends Command {
    private static boolean RIGHT_FOLLOWER_INVERTED = false;
 
    public AlignWithLimelight(double thorSetpoint, double txSetpoint, double angleSetpoint) {
-      requires(Drivetrain.getInstance());
+      addRequirements(Drivetrain.getInstance());
 
       this.txSetpoint = txSetpoint;
       this.thorSetpoint = Limelight.THOR_LINEARIZATION_FUNCTION.apply(thorSetpoint);
@@ -128,19 +128,11 @@ public class AlignWithLimelight extends Command {
     * {@inheritDoc}
     */
    @Override
-   public void end() {
+   public void end(boolean interrupted) {
       Drivetrain.getInstance().setBoth(ControlMode.Disabled, 0);
       turnController.disable();
       forwardController.disable();
       Drivetrain.getInstance().resetTalonInverts();
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void interrupted() {
-      end();
    }
 
    /**

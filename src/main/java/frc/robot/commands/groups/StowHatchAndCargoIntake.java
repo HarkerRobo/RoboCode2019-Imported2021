@@ -1,6 +1,6 @@
 package frc.robot.commands.groups;
 
-import edu.wpi.first.wpilibj.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Robot;
 import frc.robot.commands.arm.SetArmState;
 import frc.robot.commands.groups.SetScoringPosition.Location;
@@ -9,7 +9,6 @@ import frc.robot.commands.wrist.MoveWristMotionMagic;
 import frc.robot.subsystems.Arm.ArmDirection;
 import frc.robot.subsystems.HatchLatcher.ExtenderDirection;
 import frc.robot.subsystems.Wrist;
-import harkerrobolib.auto.SequentialCommandGroup;
 import harkerrobolib.commands.CallMethodCommand;
 
 /**
@@ -20,7 +19,7 @@ import harkerrobolib.commands.CallMethodCommand;
  * @author Jatin Kohli
  * @since February 12, 2019
  */
-public class StowHatchAndCargoIntake extends SequentialCommandGroup {
+public class StowHatchAndCargoIntake extends edu.wpi.first.wpilibj2.command.SequentialCommandGroup {
 
       public static final double ARM_WAIT_TIME = 0.5;
    public StowHatchAndCargoIntake() {

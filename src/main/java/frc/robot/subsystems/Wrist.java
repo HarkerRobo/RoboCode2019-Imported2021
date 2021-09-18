@@ -10,7 +10,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot.Side;
 import frc.robot.RobotMap;
 import frc.robot.RobotMap.CAN_IDs;
@@ -29,7 +29,7 @@ import harkerrobolib.wrappers.HSTalon;
  * @author Chirag Kaushik
  * @since 1/10/19
  */
-public class Wrist extends Subsystem {
+public class Wrist extends SubsystemBase {
    public enum WristDirection {
       TO_BACK(1), TO_FRONT(-1);
 
@@ -221,8 +221,7 @@ public class Wrist extends Subsystem {
       wristFollower = new VictorSPX(CAN_IDs.WRIST_FOLLOWER);
    }
 
-   @Override
-   protected void initDefaultCommand() {
+   public void initDefaultCommand() {
       setDefaultCommand(new MoveWristManual());
    }
 
@@ -433,12 +432,12 @@ public class Wrist extends Subsystem {
       return (int) (angle * Global.ENCODER_TICKS_PER_REVOLUTION / 360);
    }
 
-   public double convertEncoderToRadians(int encoder) {
-      return encoder * 1.0 / Global.ENCODER_TICKS_PER_REVOLUTION * 2 * Math.PI;
+   public double convertEncoderToRadians(double d) {
+      return d * 1.0 / Global.ENCODER_TICKS_PER_REVOLUTION * 2 * Math.PI;
    }
 
-   public double convertEncoderToDegrees(int encoder) {
-      return encoder * 1.0 / Global.ENCODER_TICKS_PER_REVOLUTION * 360.0;
+   public double convertEncoderToDegrees(double d) {
+      return d * 1.0 / Global.ENCODER_TICKS_PER_REVOLUTION * 360.0;
    }
 
    public double getCurrentAngleRadians() {
@@ -449,7 +448,7 @@ public class Wrist extends Subsystem {
       return convertEncoderToDegrees(getCurrentAngleEncoder());
    }
 
-   public int getCurrentAngleEncoder() {
+   public double getCurrentAngleEncoder() {
       return getMasterTalon().getSelectedSensorPosition();
    }
 }

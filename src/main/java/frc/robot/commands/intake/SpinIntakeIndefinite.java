@@ -15,7 +15,7 @@ public class SpinIntakeIndefinite extends IndefiniteCommand {
    private double magnitude;
 
    public SpinIntakeIndefinite(double magnitude, IntakeDirection direction) {
-      requires(Intake.getInstance());
+      addRequirements(Intake.getInstance());
       this.magnitude = magnitude;
       this.direction = direction;
    }
@@ -32,15 +32,7 @@ public class SpinIntakeIndefinite extends IndefiniteCommand {
     * {@inheritDoc}
     */
    @Override
-   public void end() {
-      Intake.getInstance().setControllerOutput(0.0);
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void interrupted() {
+   public void end(boolean interrupted) {
       Intake.getInstance().setControllerOutput(0.0);
    }
 }

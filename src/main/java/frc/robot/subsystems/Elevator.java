@@ -6,7 +6,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotMap;
 import frc.robot.RobotMap.CAN_IDs;
 import frc.robot.RobotMap.Global;
@@ -23,7 +23,7 @@ import harkerrobolib.wrappers.HSTalon;
  * @author Chirag Kaushik
  * @since 1/10/19
  */
-public class Elevator extends Subsystem {
+public class Elevator extends SubsystemBase {
    private static Elevator el;
 
    private HSTalon masterTalon;
@@ -186,8 +186,7 @@ public class Elevator extends Subsystem {
       followerTalon = new HSTalon(CAN_IDs.EL_TALON_FOLLOWER);
    }
 
-   @Override
-   protected void initDefaultCommand() {
+   public void initDefaultCommand() {
       setDefaultCommand(new MoveElevatorManual());
    }
 
@@ -287,8 +286,8 @@ public class Elevator extends Subsystem {
       return isAbove(getMasterTalon().getSelectedSensorPosition(Global.PID_PRIMARY), position);
    }
 
-   public boolean isAbove(int comparedPosition, int comparisonPosition) {
-      return comparedPosition - comparisonPosition > MoveElevatorMotionMagic.ALLOWABLE_ERROR;
+   public boolean isAbove(double d, int comparisonPosition) {
+      return d - comparisonPosition > MoveElevatorMotionMagic.ALLOWABLE_ERROR;
    }
 
    /**
@@ -305,8 +304,8 @@ public class Elevator extends Subsystem {
     * tolerance of an allowable error. Must have preconfigured the selected sensor
     * as an encoder.
     */
-   public boolean isBelow(int comparedPosition, int comparisonPosition) {
-      return comparedPosition - comparisonPosition < -MoveElevatorMotionMagic.ALLOWABLE_ERROR;
+   public boolean isBelow(double d, int comparisonPosition) {
+      return d - comparisonPosition < -MoveElevatorMotionMagic.ALLOWABLE_ERROR;
    }
 
    public boolean isAt(int position) {
@@ -318,7 +317,7 @@ public class Elevator extends Subsystem {
       Elevator.getInstance().getMasterTalon().set(mode, value, DemandType.ArbitraryFeedForward, FFGRAV);
    }
 
-   public int getCurrentPositionEncoder() {
+   public double getCurrentPositionEncoder() {
       return getMasterTalon().getSelectedSensorPosition();
    }
 }

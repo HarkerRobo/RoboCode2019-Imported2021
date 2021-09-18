@@ -49,7 +49,7 @@ public class AlignWithLimelightIndefinite extends IndefiniteCommand {
    private static boolean RIGHT_FOLLOWER_INVERTED = false;
 
    public AlignWithLimelightIndefinite(double thorSetpoint, double txSetpoint) {
-      requires(Drivetrain.getInstance());
+      addRequirements(Drivetrain.getInstance());
 
       limelight = Limelight.getInstance();
 

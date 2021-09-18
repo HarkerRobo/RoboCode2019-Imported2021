@@ -14,7 +14,7 @@ public class SpinIntakeVelocity extends IndefiniteCommand {
     private double setpoint;
 
     public SpinIntakeVelocity(IntakeDirection direction, double setpoint) {
-        requires(Intake.getInstance());
+        addRequirements(Intake.getInstance());
 
         this.setpoint = setpoint;
         this.direction = direction;
@@ -22,29 +22,13 @@ public class SpinIntakeVelocity extends IndefiniteCommand {
     }
 
     public void execute() {
-        if(Intake.getInstance().getSpark() == null) {
-            Intake.getInstance().getVictor().set(ControlMode.PercentOutput, Intake.DEFAULT_INTAKE_MAGNITUDE * direction.getSign());
-        } else {
-            double currentVelocity = Intake.getInstance().getSpark().getEncoder().getVelocity();
-            double error = setpoint - currentVelocity;
-            Intake.getInstance().getSpark().set((kF*setpoint + kP*error)*direction.getSign());
-        }
+        Intake.getInstance().getVictor().set(ControlMode.PercentOutput, Intake.DEFAULT_INTAKE_MAGNITUDE * direction.getSign());
     }
 
        /**
     * {@inheritDoc}
     */
-   @Override
-   public void end() {
+   public void end(boolean interrupted) {
       Intake.getInstance().setControllerOutput(0.0);
    }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void interrupted() {
-      Intake.getInstance().setControllerOutput(0.0);
-   }
-
 }

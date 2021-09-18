@@ -8,8 +8,8 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.OI;
 import frc.robot.RobotMap.Global;
 import frc.robot.subsystems.Drivetrain;
@@ -30,7 +30,7 @@ import frc.robot.util.FalconPathPlanner;
  * @author Jatin Kohli
  * @author Arnav Gupta
  */
-public class GenerateAndFollowPath extends Command
+public class GenerateAndFollowPath extends CommandBase
 {
     private FalconPathPlanner f;
 
@@ -64,7 +64,7 @@ public class GenerateAndFollowPath extends Command
 
     public GenerateAndFollowPath()
     {
-        requires(Drivetrain.getInstance());
+        addRequirements(Drivetrain.getInstance());
         status = new MotionProfileStatus();
     }
 
@@ -96,7 +96,7 @@ public class GenerateAndFollowPath extends Command
     }
 
     @Override
-    protected void initialize()
+    public void initialize()
     {
         double startTime = Timer.getFPGATimestamp();
         initPath();
@@ -112,7 +112,7 @@ public class GenerateAndFollowPath extends Command
     }
 
     @Override
-    protected void execute() 
+    public void execute() 
     {
         Drivetrain.getInstance().getLeftMaster().getMotionProfileStatus(status);
 
@@ -128,14 +128,14 @@ public class GenerateAndFollowPath extends Command
     }
 
     @Override
-    protected boolean isFinished() {
+    public boolean isFinished() {
         return status.isLast || 
                 Math.abs(OI.getInstance().getDriverGamepad().getLeftX()) >= OI.DRIVER_DEADBAND ||
                 Math.abs(OI.getInstance().getDriverGamepad().getLeftY()) >= OI.DRIVER_DEADBAND;
     }
 
 	@Override
-	protected void end()
+	public void end(boolean interrupted)
 	{
         Drivetrain.getInstance().getLeftMaster().set(ControlMode.Disabled, 0);
         Drivetrain.getInstance().getRightMaster().set(ControlMode.Disabled, 0);
@@ -146,13 +146,6 @@ public class GenerateAndFollowPath extends Command
         Drivetrain.getInstance().getLeftMaster().setNeutralMode(NeutralMode.Coast);
     	Drivetrain.getInstance().getRightMaster().setNeutralMode(NeutralMode.Coast);
     }
-
-	@Override
-	protected void interrupted()
-	{
-		end();
-	}
-
     /**
      * Gets the waypoints for the necessary path from the Limelight's localization features
      */
@@ -260,9 +253,6 @@ public class GenerateAndFollowPath extends Command
         
 		Drivetrain.getInstance().getLeftMaster().configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, Global.PID_PRIMARY);
 		Drivetrain.getInstance().getRightMaster().configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, Global.PID_PRIMARY);
-
-		Drivetrain.getInstance().getLeftMaster().setSelectedSensorPosition(0, Global.PID_PRIMARY);
-		Drivetrain.getInstance().getRightMaster().setSelectedSensorPosition(0, Global.PID_PRIMARY);
 
 		Drivetrain.getInstance().getLeftMaster().setSensorPhase(Drivetrain.LEFT_POSITION_PHASE);
         Drivetrain.getInstance().getRightMaster().setSensorPhase(Drivetrain.RIGHT_POSITION_PHASE);

@@ -22,6 +22,8 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.arm.SetArmState;
+import frc.robot.commands.arm.ToggleArmState;
+import frc.robot.commands.drivetrain.DriveWithVelocityManual;
 import frc.robot.commands.drivetrain.GenerateAndFollowPath;
 import frc.robot.commands.drivetrain.SetLimelightLEDMode;
 import frc.robot.commands.drivetrain.SetLimelightLEDMode.LEDMode;
@@ -30,6 +32,9 @@ import frc.robot.commands.drivetrain.SetLimelightViewMode.ViewMode;
 import frc.robot.commands.elevator.MoveElevatorManual;
 import frc.robot.commands.groups.SetScoringPosition;
 import frc.robot.commands.hatchpanelintake.SetExtenderState;
+import frc.robot.commands.intake.SpinIntakeManual;
+import frc.robot.commands.intake.SpinIntakeVelocity;
+import frc.robot.commands.rollers.SpinRollersManual;
 import frc.robot.commands.wrist.MoveWristManual;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Arm.ArmDirection;
@@ -119,6 +124,11 @@ public class Robot extends TimedRobot {
       
       Elevator.getInstance().getMasterTalon().setSelectedSensorPosition(0);
 
+      drivetrain.setDefaultCommand(new DriveWithVelocityManual());
+      elevator.setDefaultCommand(new MoveElevatorManual());
+      intake.setDefaultCommand(new SpinIntakeManual());
+      rollers.setDefaultCommand(new SpinRollersManual());
+      wrist.setDefaultCommand(new MoveWristManual());
    }
    /**
     * This function is run when the robot is first started up and should be used
